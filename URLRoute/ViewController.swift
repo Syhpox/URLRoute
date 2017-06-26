@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         self.view.backgroundColor = .gray
         
         let btn = UIButton.init(type: .system)
-        btn.frame = CGRect(x: 100, y: 100, width: 150, height: 50)
+        btn.frame = CGRect(x: 100, y: 100, width: 200, height: 50)
         btn.backgroundColor = .lightGray
         btn.setTitle("WebURL_https", for: .normal)
         btn.setTitleColor(.black, for: .normal)
@@ -26,13 +26,20 @@ class ViewController: UIViewController {
         
         
         let btn1 = UIButton.init(type: .system)
-        btn1.frame = CGRect(x: 100, y: 200, width: 150, height: 50)
+        btn1.frame = CGRect(x: 100, y: 200, width: 200, height: 50)
         btn1.backgroundColor = .lightGray
-        btn1.setTitle("app内链", for: .normal)
+        btn1.setTitle("app内链TestViewController", for: .normal)
         btn1.setTitleColor(.black, for: .normal)
         self.view.addSubview(btn1)
         btn1.addTarget(self, action: #selector(btnClick1), for: .touchUpInside)
-
+        
+        let btn2 = UIButton.init(type: .system)
+        btn2.frame = CGRect(x: 100, y: 300, width: 200, height: 50)
+        btn2.backgroundColor = .lightGray
+        btn2.setTitle("app内链alertVC", for: .normal)
+        btn2.setTitleColor(.black, for: .normal)
+        self.view.addSubview(btn2)
+        btn2.addTarget(self, action: #selector(btnClick2), for: .touchUpInside)
         
         
     }
@@ -44,6 +51,11 @@ class ViewController: UIViewController {
     func btnClick1() {
         Navigator.show("testApp://test1")
     }
+    
+    func btnClick2() {
+        Navigator.show("testApp://alert")
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
