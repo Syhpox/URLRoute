@@ -69,8 +69,6 @@ class URLNavigator {
                     switch patternItem.navigatorAction! {
                     case .push:
                         currentVC?.navigationController?.pushViewController(vc, animated: animated)
-                    case .pop:
-                        print("暂时不加")
                     case .present:
                         currentVC?.present(vc, animated: animated, completion: nil)
                     case .custom:
@@ -109,8 +107,7 @@ enum URLNavigatorContext {
 // URLNavigator导航行为
 enum URLNavigatorAction {
     case push
-    case pop
-    case present  //    case alert
+    case present
     case custom
 }
 
