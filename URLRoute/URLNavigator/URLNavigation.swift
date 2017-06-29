@@ -88,20 +88,12 @@ class URLNavigator {
         return false
     }
     
-    
-    
-//    func present(_ url: String?, animated: Bool = true, type: URLNavigatorContext = .click)
-    
-    
-    
-    
-    
 }
 
 // URLNavigator使用场景
 enum URLNavigatorContext {
-    case push    // 推送
-    case click   // 点击
+    case push    // 推送  返回rootViewController
+    case click   // 点击  当前界面直接 push present
 }
 
 // URLNavigator导航行为

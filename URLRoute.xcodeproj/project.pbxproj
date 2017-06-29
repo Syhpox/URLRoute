@@ -82,8 +82,8 @@
 		F85FA1101EFB5E48003950CA /* URLNavigator */ = {
 			isa = PBXGroup;
 			children = (
-				F85FA1111EFB5E48003950CA /* URLNavigation.swift */,
 				F85FA1121EFB5E48003950CA /* URLNavigationMap.swift */,
+				F85FA1111EFB5E48003950CA /* URLNavigation.swift */,
 				F85FA1131EFB5E48003950CA /* URLNavigationPattern.swift */,
 				F85FA1141EFB5E48003950CA /* URLNavigatorData.swift */,
 			);

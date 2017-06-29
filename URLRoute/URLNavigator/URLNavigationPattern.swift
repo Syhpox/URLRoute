@@ -8,9 +8,9 @@
 
 import UIKit
 
-fileprivate let SchemeCut = "://"
-fileprivate let KeyCut = "?"
-fileprivate let ParamCut = "?param="
+fileprivate let SchemeCut = "://"     // 协议截取判断
+fileprivate let KeyCut = "?"          // key截取判断
+fileprivate let ParamCut = "?param="  // json字符截取判断
 
 // 映射模型
 struct URLNavigationPattern {
