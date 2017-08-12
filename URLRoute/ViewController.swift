@@ -45,11 +45,11 @@ class ViewController: UIViewController {
     }
     
     func btnClick() {
-        Navigator.show("https://www.baidu.com")
+        Navigator.show("https://www.baidu.com", title: "网页")
     }
     
     func btnClick1() {
-        Navigator.show("testApp://test1")
+        Navigator.show("testApp://test1", title: "内链Test")
     }
     
     func btnClick2() {

@@ -1,38 +1,34 @@
 //
-//  TestViewController.swift
+//  ThreeViewController.swift
 //  URLRoute
 //
-//  Created by WZH on 2017/6/22.
+//  Created by WZH on 2017/8/12.
 //  Copyright © 2017年 Zhihua. All rights reserved.
 //
 
 import UIKit
 
-class TestViewController: UIViewController {
+class ThreeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Three"
 
         // Do any additional setup after loading the view.
-        self.navigationItem.title = "TestViewController"
-        self.view.backgroundColor = UIColor.cyan
-        
+        self.view.backgroundColor = .gray
         
         let btn = UIButton.init(type: .system)
-        btn.frame = CGRect(x: 100, y: 100, width: 150, height: 50)
+        btn.frame = CGRect(x: 100, y: 100, width: 200, height: 50)
         btn.backgroundColor = .lightGray
-        btn.setTitle("dismiss", for: .normal)
+        btn.setTitle("WebURL_https", for: .normal)
         btn.setTitleColor(.black, for: .normal)
         self.view.addSubview(btn)
         btn.addTarget(self, action: #selector(btnClick), for: .touchUpInside)
 
     }
-    
     func btnClick() {
-        Navigator.show("testApp://test2", origin: .tabBar(1))
-//        self.dismiss(animated: true, completion: nil)
+        Navigator.show("testApp://test1", title: "内链Test")
     }
-
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

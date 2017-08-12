@@ -10,7 +10,9 @@ import UIKit
 
 struct URLNavigationMap {
     
+    /// <scheme>://<user>:<password>@<host>:<port>/<path>;<params>?<query>#<frag>
     /// 初始化映射表  fcredirect://express_delivery?param={"type":1}
+    
     static func initialize() {
         
         // web 外链
@@ -27,8 +29,12 @@ struct URLNavigationMap {
             return TestViewController()
         }
         // 内链  present
-        Navigator.register("testApp://test1", action: .present) { (data) in
+        Navigator.register("testApp://test1", action: .push) { (data) in
             return TestViewController()
+        }
+        
+        Navigator.register("testApp://test2", action: .push_pop, origin: .tabBar(2)) { (data) -> UIViewController? in
+            return OneViewController()
         }
         
         // 内链

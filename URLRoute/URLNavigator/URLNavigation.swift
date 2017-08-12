@@ -17,56 +17,85 @@ class URLNavigator {
     fileprivate var mapDic: [String: URLNavigationPattern] = [:]
     /// 完成回调
     typealias URLCompleteHandler = (URLNavigatorData) -> Void
-
+    
     /// 注册 key handler
-    func register(_ url: String, action: URLNavigatorAction = .push, handler: @escaping ((URLNavigatorData) -> UIViewController?)) {
+    func register(_ url: String, action: URLNavigatorAction = .push_pop, origin: URLNavigatorOrigin? = nil, handler: @escaping ((URLNavigatorData) -> UIViewController?)) {
         var pattern = URLNavigationPattern.analysis(url, handler: handler)
-        guard self.mapDic[pattern.key!] == nil else {
-            print("\(pattern.key!)注册重复!!! 注册失败")
-            return
-        }
+        assert(self.mapDic[pattern.key!] == nil, "\(pattern.key!)注册重复!!! 注册失败")
         pattern.navigatorAction = action
+        pattern.navigatorOrigin = origin
         self.mapDic[pattern.key!] = pattern
     }
     
     @discardableResult
-    func show(_ url: String?, animated: Bool = true, type: URLNavigatorContext = .click, complete: URLCompleteHandler? = nil) -> Bool {
+    func show(_ url: String?, type: URLNavigatorContext = .local, origin: URLNavigatorOrigin? = nil, action: URLNavigatorAction? = nil,title: String? = nil, localDic: [String: Any] = [:], animated: Bool = true, complete: URLCompleteHandler? = nil) -> Bool {
+        // url 空判断
         guard url != nil && url != "" else {
-            print("url 为空或者空字符串！！！push失败")
+            NavigatorError.emptyUrl.log()
             return false
         }
-        
-        let urlData = URLAnalysis.analysis(url!)
+        // 解析url
+        var urlData = URLAnalysis.analysis(url!)
         guard urlData.scheme != nil && urlData.key != nil else {
-            print("url不合法 解析协议或key失败！！！push失败")
+            NavigatorError.errorUrl.log()
             return false
         }
-        
+        // 获取本地注册的路由pattern
         if let patternItem = mapDic[urlData.key!] {
             var currentVC = UIViewController.topMost
             guard currentVC != nil else {
-                print("获取顶层ViewController失败！！！push失败")
+                NavigatorError.emptyVC.log()
                 return false
             }
             
+            // 起点
+            if let available_origin = origin ?? patternItem.navigatorOrigin {
+                switch available_origin {
+                case .tabBar(let index):
+                    if (currentVC?.tabBarController?.viewControllers?.count)! >= index + 1 {
+                        currentVC?.tabBarController?.selectedIndex = index
+                    } else {
+                        NavigatorError.errorTabBar.log()
+                    }
+                }
+            }
+            
             // 使用场景
-            if type == .push {
-                // 推送 回到首页
-                currentVC?.tabBarController?.selectedIndex = 0
+            switch type {
+            case .local:
+                currentVC = UIViewController.topMost
+            case .global:
                 let currentVC_tab = UIViewController.topMost
                 currentVC_tab?.navigationController?.popToRootViewController(animated: false)
                 currentVC = UIViewController.topMost
             }
             
             guard currentVC != nil else {
-                print("获取顶层ViewController失败！！！push失败")
+                NavigatorError.emptyVC.log()
                 return false
             }
-
+            
             if let hander = patternItem.handler {
+                // vc title 统一处理
+                urlData.localDic = localDic;
+                if title != nil {
+                    urlData.localDic["vc_title"] = title;
+                }
                 if let vc = hander(urlData) {
-                    
-                    switch patternItem.navigatorAction! {
+                    if let dicTitle = urlData.localDic["vc_title"] as? String {
+                        vc.title = dicTitle
+                    }
+                    // 跳转方式 导航行为
+                    let available_action = action ?? patternItem.navigatorAction
+                    switch available_action! {
+                    case .push_pop:
+                        // 自动跳转  1.目标第一个 pop  2.非第一个 先popToRoot 再push
+                        if (currentVC?.navigationController?.viewControllers.first?.isKind(of: vc.classForCoder))! {
+                            currentVC?.navigationController?.popToRootViewController(animated: animated)
+                        } else {
+                            currentVC?.navigationController?.popToRootViewController(animated: false)
+                            UIViewController.topMost?.navigationController?.pushViewController(vc, animated: animated)
+                        }
                     case .push:
                         currentVC?.navigationController?.pushViewController(vc, animated: animated)
                     case .present:
@@ -82,24 +111,40 @@ class URLNavigator {
             }
             return true
         } else {
-            print("未注册的key！！！导航失败")
+            NavigatorError.errorKey.log()
         }
         
         return false
     }
-    
 }
 
-// URLNavigator使用场景
+enum NavigatorError: String {
+    case emptyUrl = "[Navigator Error]: url 为空或者空字符串"
+    case errorUrl = "[Navigator Error]: url不合法 解析协议或key失败"
+    case emptyVC  = "[Navigator Error]: 获取顶层ViewController失败"
+    case errorKey = "[Navigator Error]: 未注册的key"
+    case errorTabBar = "[Navigator Error]: tabBar设置Index越界"
+    func log() {
+        print(self.rawValue)
+    }
+}
+
+// URLNavigator使用场景  调用时申明
 enum URLNavigatorContext {
-    case push    // 推送  返回rootViewController
-    case click   // 点击  当前界面直接 push present
+    case local                              // 本地环境 以当前位置 进行转场              app当前所在vc已知 (本地固定代码位置）
+    case global                             // 全局环境 一般用于推送,任意初始位置转场      app当前所在vc未知 (比如点击推送)
 }
 
-// URLNavigator导航行为
+// URLNavigator导航时起点  注册时,调用时申明 其中优先级 调用时 > 注册时
+enum URLNavigatorOrigin {
+    case tabBar(Int) // 先选择TabbarIndex 1.目标第一个 pop  2.非第一个 先popToRoot 再push    不做：2.中间的 初始化新的再pop 3.最后一个 push新的  删除旧的  4.不存在 popToRoot 再push
+}
+
+// URLNavigator导航行为  注册时,调用时申明 其中优先级 调用时 > 注册时
 enum URLNavigatorAction {
-    case push
-    case present
+    case push_pop // 自动push pop(规则：1.目的vc在当前UINavigatorController中首位，popToRoot 2.非1条件，先popToRoot，再push目的vc)
+    case push     // 直接push  用于本地
+    case present  //
     case custom
 }
 

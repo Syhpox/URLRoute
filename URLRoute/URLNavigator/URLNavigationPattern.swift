@@ -12,6 +12,9 @@ fileprivate let SchemeCut = "://"     // 协议截取判断
 fileprivate let KeyCut = "?"          // key截取判断
 fileprivate let ParamCut = "?param="  // json字符截取判断
 
+UIViewController
+UIView
+
 // 映射模型
 struct URLNavigationPattern {
     /// 源URL
@@ -32,6 +35,8 @@ struct URLNavigationPattern {
     
     /// 导航弹出方式
     var navigatorAction: URLNavigatorAction?
+    /// 导航起点
+    var navigatorOrigin: URLNavigatorOrigin?
     
     // 注册 解析
     static func analysis(_ url: String, handler: ((URLNavigatorData) -> UIViewController?)? = nil) -> URLNavigationPattern {
@@ -68,7 +73,7 @@ public struct URLAnalysis {
             }
             json = totalStr
         }
-        return URLNavigatorData(scheme: scheme, urlString: url, jsonString: json, key: key)
+        return URLNavigatorData(scheme: scheme, urlString: url, jsonString: json, key: key, localDic: [:])
     }
 }
 

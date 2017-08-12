@@ -21,11 +21,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let naviVC = UINavigationController.init(rootViewController: ViewController())
-        window!.rootViewController = naviVC
+        let tabVc = UITabBarController.init()
+        window!.rootViewController = tabVc
         window!.makeKeyAndVisible()
         // 路由注册 初始化
         URLNavigationMap.initialize()
+
+        
+        let naviVC_one = UINavigationController.init(rootViewController: OneViewController())
+        naviVC_one.tabBarItem = UITabBarItem.init(title: "One", image: nil, tag: 0)
+        
+        let naviVC_two = UINavigationController.init(rootViewController: TwoViewController())
+        naviVC_two.tabBarItem = UITabBarItem.init(title: "Two", image: nil, tag: 1)
+
+        let naviVC_three = UINavigationController.init(rootViewController: ThreeViewController())
+        naviVC_three.tabBarItem = UITabBarItem.init(title: "Three", image: nil, tag: 2)
+
+        tabVc.addChildViewController(naviVC_one)
+        tabVc.addChildViewController(naviVC_two)
+        tabVc.addChildViewController(naviVC_three)
+
         
         
         
