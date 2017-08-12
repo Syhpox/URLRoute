@@ -12,9 +12,6 @@ fileprivate let SchemeCut = "://"     // 协议截取判断
 fileprivate let KeyCut = "?"          // key截取判断
 fileprivate let ParamCut = "?param="  // json字符截取判断
 
-UIViewController
-UIView
-
 // 映射模型
 struct URLNavigationPattern {
     /// 源URL
