@@ -19,14 +19,20 @@ class OneViewController: UIViewController {
         let btn = UIButton.init(type: .system)
         btn.frame = CGRect(x: 100, y: 100, width: 200, height: 50)
         btn.backgroundColor = .lightGray
-        btn.setTitle("WebURL_https", for: .normal)
+        btn.setTitle("自定义Alert", for: .normal)
         btn.setTitleColor(.black, for: .normal)
         self.view.addSubview(btn)
         btn.addTarget(self, action: #selector(btnClick), for: .touchUpInside)
 
     }
     func btnClick() {
-        Navigator.show("testApp://test1", title: "内链Test")
+        let view = NavigatorTestView.init(frame: .zero)
+        view.backgroundColor = .brown
+        view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
+        let naVC = URLNavigatorViewController.init(view)
+        self.present(naVC, animated: true, completion: nil)
+
+//        Navigator.show("testApp://urlNavigator", title: "测试提示title")
     }
 
     override func didReceiveMemoryWarning() {

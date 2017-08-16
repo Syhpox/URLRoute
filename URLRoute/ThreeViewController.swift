@@ -20,7 +20,7 @@ class ThreeViewController: UIViewController {
         let btn = UIButton.init(type: .system)
         btn.frame = CGRect(x: 100, y: 100, width: 200, height: 50)
         btn.backgroundColor = .lightGray
-        btn.setTitle("WebURL_https", for: .normal)
+        btn.setTitle("push", for: .normal)
         btn.setTitleColor(.black, for: .normal)
         self.view.addSubview(btn)
         btn.addTarget(self, action: #selector(btnClick), for: .touchUpInside)

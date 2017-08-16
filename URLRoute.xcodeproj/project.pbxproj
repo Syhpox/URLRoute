@@ -18,9 +18,12 @@
 		F85FA1181EFB5E48003950CA /* URLNavigatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85FA1141EFB5E48003950CA /* URLNavigatorData.swift */; };
 		F85FA11C1EFB5F5D003950CA /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85FA11B1EFB5F5D003950CA /* WebViewController.swift */; };
 		F85FA11E1EFB687A003950CA /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85FA11D1EFB687A003950CA /* TestViewController.swift */; };
+		F85FC0291F4187C3003DBEA4 /* URLNavigatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85FC0281F4187C3003DBEA4 /* URLNavigatorViewController.swift */; };
 		F878E4801F3EE37C00648FB3 /* OneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F878E47F1F3EE37C00648FB3 /* OneViewController.swift */; };
 		F878E4821F3EE3A500648FB3 /* TwoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F878E4811F3EE3A500648FB3 /* TwoViewController.swift */; };
 		F878E4841F3EE3B900648FB3 /* ThreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F878E4831F3EE3B900648FB3 /* ThreeViewController.swift */; };
+		F880D79D1F443901005F0B58 /* NavigatorTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F880D79C1F443901005F0B58 /* NavigatorTestView.swift */; };
+		F880D79F1F446B34005F0B58 /* FourViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F880D79E1F446B34005F0B58 /* FourViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,9 +40,12 @@
 		F85FA1141EFB5E48003950CA /* URLNavigatorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLNavigatorData.swift; sourceTree = "<group>"; };
 		F85FA11B1EFB5F5D003950CA /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		F85FA11D1EFB687A003950CA /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		F85FC0281F4187C3003DBEA4 /* URLNavigatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLNavigatorViewController.swift; sourceTree = "<group>"; };
 		F878E47F1F3EE37C00648FB3 /* OneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneViewController.swift; sourceTree = "<group>"; };
 		F878E4811F3EE3A500648FB3 /* TwoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwoViewController.swift; sourceTree = "<group>"; };
 		F878E4831F3EE3B900648FB3 /* ThreeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreeViewController.swift; sourceTree = "<group>"; };
+		F880D79C1F443901005F0B58 /* NavigatorTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorTestView.swift; sourceTree = "<group>"; };
+		F880D79E1F446B34005F0B58 /* FourViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FourViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +90,7 @@
 				F878E47F1F3EE37C00648FB3 /* OneViewController.swift */,
 				F878E4811F3EE3A500648FB3 /* TwoViewController.swift */,
 				F878E4831F3EE3B900648FB3 /* ThreeViewController.swift */,
+				F880D79E1F446B34005F0B58 /* FourViewController.swift */,
 			);
 			path = URLRoute;
 			sourceTree = "<group>";
@@ -95,6 +102,8 @@
 				F85FA1111EFB5E48003950CA /* URLNavigation.swift */,
 				F85FA1131EFB5E48003950CA /* URLNavigationPattern.swift */,
 				F85FA1141EFB5E48003950CA /* URLNavigatorData.swift */,
+				F85FC0281F4187C3003DBEA4 /* URLNavigatorViewController.swift */,
+				F880D79C1F443901005F0B58 /* NavigatorTestView.swift */,
 			);
 			path = URLNavigator;
 			sourceTree = "<group>";
@@ -174,12 +183,15 @@
 			files = (
 				F878E4801F3EE37C00648FB3 /* OneViewController.swift in Sources */,
 				F85FA1011EFB5DE1003950CA /* ViewController.swift in Sources */,
+				F880D79F1F446B34005F0B58 /* FourViewController.swift in Sources */,
 				F878E4841F3EE3B900648FB3 /* ThreeViewController.swift in Sources */,
 				F85FA0FF1EFB5DE1003950CA /* AppDelegate.swift in Sources */,
+				F880D79D1F443901005F0B58 /* NavigatorTestView.swift in Sources */,
 				F85FA11E1EFB687A003950CA /* TestViewController.swift in Sources */,
 				F85FA1171EFB5E48003950CA /* URLNavigationPattern.swift in Sources */,
 				F878E4821F3EE3A500648FB3 /* TwoViewController.swift in Sources */,
 				F85FA1161EFB5E48003950CA /* URLNavigationMap.swift in Sources */,
+				F85FC0291F4187C3003DBEA4 /* URLNavigatorViewController.swift in Sources */,
 				F85FA11C1EFB5F5D003950CA /* WebViewController.swift in Sources */,
 				F85FA1151EFB5E48003950CA /* URLNavigation.swift in Sources */,
 				F85FA1181EFB5E48003950CA /* URLNavigatorData.swift in Sources */,

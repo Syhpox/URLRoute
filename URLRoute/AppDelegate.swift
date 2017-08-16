@@ -37,13 +37,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let naviVC_three = UINavigationController.init(rootViewController: ThreeViewController())
         naviVC_three.tabBarItem = UITabBarItem.init(title: "Three", image: nil, tag: 2)
 
+        let naviVC_four = UINavigationController.init(rootViewController: FourViewController())
+        naviVC_four.tabBarItem = UITabBarItem.init(title: "Four", image: nil, tag: 3)
+
         tabVc.addChildViewController(naviVC_one)
         tabVc.addChildViewController(naviVC_two)
         tabVc.addChildViewController(naviVC_three)
+        tabVc.addChildViewController(naviVC_four)
 
-        
-        
-        
         return true
     }
 

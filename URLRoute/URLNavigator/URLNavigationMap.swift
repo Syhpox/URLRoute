@@ -7,13 +7,19 @@
 //
 
 import UIKit
+class URLNavigatorDelegate: NSObject {
+    
+}
+
 
 struct URLNavigationMap {
     
     /// <scheme>://<user>:<password>@<host>:<port>/<path>;<params>?<query>#<frag>
     /// 初始化映射表  fcredirect://express_delivery?param={"type":1}
-    
+    static var delegate: URLNavigatorDelegate = URLNavigatorDelegate()
+
     static func initialize() {
+//        Navigator.register(<#T##url: String##String#>, action: <#T##URLNavigatorAction#>, origin: <#T##URLNavigatorOrigin?#>, handler: <#T##((URLNavigatorData) -> UIViewController?)##((URLNavigatorData) -> UIViewController?)##(URLNavigatorData) -> UIViewController?#>)
         
         // web 外链
         Navigator.register("http://") { (data) in
@@ -22,7 +28,6 @@ struct URLNavigationMap {
         Navigator.register("https://") { (data) in
             return WebViewController.init(data.urlString ?? "")
         }
-        
         
         // test 内链  默认push
         Navigator.register("testApp://test") { (data) in
@@ -49,7 +54,16 @@ struct URLNavigationMap {
             
             return alertVC
         }
-
+        
+        // 本地使用，不路由
+        Navigator.register("testApp://urlNavigator", action: .present) { (data) -> UIViewController? in
+            
+            let view = NavigatorTestView.init(frame: .zero)
+            view.backgroundColor = .brown
+            view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
+            let naVC = URLNavigatorViewController.init(view)
+            return naVC
+        }
 
     }
 }

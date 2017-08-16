@@ -14,7 +14,7 @@ class TestViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.navigationItem.title = "TestViewController"
+//        self.navigationItem.title = "TestViewController"
         self.view.backgroundColor = UIColor.cyan
         
         

@@ -1,33 +1,33 @@
 //
-//  TwoViewController.swift
+//  FourViewController.swift
 //  URLRoute
 //
-//  Created by WZH on 2017/8/12.
+//  Created by WZH on 2017/8/16.
 //  Copyright © 2017年 Zhihua. All rights reserved.
 //
 
 import UIKit
 
-class TwoViewController: UIViewController {
+class FourViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Two"
-
+        self.title = "Four"
+        
         // Do any additional setup after loading the view.
         self.view.backgroundColor = .gray
         
         let btn = UIButton.init(type: .system)
         btn.frame = CGRect(x: 100, y: 100, width: 200, height: 50)
         btn.backgroundColor = .lightGray
-        btn.setTitle("系统Alert", for: .normal)
+        btn.setTitle("Web_https", for: .normal)
         btn.setTitleColor(.black, for: .normal)
         self.view.addSubview(btn)
         btn.addTarget(self, action: #selector(btnClick), for: .touchUpInside)
-
+        
     }
     func btnClick() {
-        Navigator.show("testApp://alert", title: "内链Test")
+        Navigator.show("https://www.baidu.com", title: "网页")
     }
 
     override func didReceiveMemoryWarning() {

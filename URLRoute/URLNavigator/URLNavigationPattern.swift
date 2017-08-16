@@ -73,15 +73,3 @@ public struct URLAnalysis {
         return URLNavigatorData(scheme: scheme, urlString: url, jsonString: json, key: key, localDic: [:])
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

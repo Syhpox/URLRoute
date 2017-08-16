@@ -41,7 +41,6 @@ class ViewController: UIViewController {
         self.view.addSubview(btn2)
         btn2.addTarget(self, action: #selector(btnClick2), for: .touchUpInside)
         
-        
     }
     
     func btnClick() {

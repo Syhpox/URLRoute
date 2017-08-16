@@ -13,10 +13,15 @@ let Navigator = URLNavigator.default
 class URLNavigator {
     /// 单例
     open static let `default` = URLNavigator()
+    
     /// 映射数组  key : pattern
     fileprivate var mapDic: [String: URLNavigationPattern] = [:]
+    
     /// 完成回调
     typealias URLCompleteHandler = (URLNavigatorData) -> Void
+    
+    /// urlHandle
+    fileprivate var urlHandles: [String: ([String: Any]) -> Void] = [:]
     
     /// 注册 key handler
     func register(_ url: String, action: URLNavigatorAction = .push_pop, origin: URLNavigatorOrigin? = nil, handler: @escaping ((URLNavigatorData) -> UIViewController?)) {
@@ -56,6 +61,7 @@ class URLNavigator {
                         currentVC?.tabBarController?.selectedIndex = index
                     } else {
                         NavigatorError.errorTabBar.log()
+                        return false
                     }
                 }
             }
@@ -89,7 +95,7 @@ class URLNavigator {
                     let available_action = action ?? patternItem.navigatorAction
                     switch available_action! {
                     case .push_pop:
-                        // 自动跳转  1.目标第一个 pop  2.非第一个 先popToRoot 再push
+                        // 自动跳转  1.目标第一个 pop  2.非第一个 先popToRootVC 再push
                         if (currentVC?.navigationController?.viewControllers.first?.isKind(of: vc.classForCoder))! {
                             currentVC?.navigationController?.popToRootViewController(animated: animated)
                         } else {
@@ -116,6 +122,24 @@ class URLNavigator {
         
         return false
     }
+    
+    /// 一对一通讯
+    /// 赋值block 代码块内容  相当于监听通知
+    func addBlock(_ mark: String, block: @escaping ([String: Any]) -> Void) {
+//        assert(Navigator.urlHandles[mark] == nil, "mark 注册重复了 更名吧")
+        // 优先覆盖以前的
+        Navigator.urlHandles[mark] = block
+    }
+    
+    /// 执行block 执行代码    相当于发通知
+    func doBlock(_ mark: String, data: [String: Any]) {
+        if let block = Navigator.urlHandles[mark] {
+            block(data)
+        } else {
+            NavigatorError.emptyBlock.log()
+        }
+    }
+    
 }
 
 enum NavigatorError: String {
@@ -124,27 +148,29 @@ enum NavigatorError: String {
     case emptyVC  = "[Navigator Error]: 获取顶层ViewController失败"
     case errorKey = "[Navigator Error]: 未注册的key"
     case errorTabBar = "[Navigator Error]: tabBar设置Index越界"
+    case emptyBlock = "[Navigator Error]: 未定义block，无法执行"
+
     func log() {
         print(self.rawValue)
     }
 }
 
-// URLNavigator使用场景  调用时申明
+// URLNavigator导航使用场景  调用时申明
 enum URLNavigatorContext {
-    case local                              // 本地环境 以当前位置 进行转场              app当前所在vc已知 (本地固定代码位置）
-    case global                             // 全局环境 一般用于推送,任意初始位置转场      app当前所在vc未知 (比如点击推送)
+    case local     // 本地环境 以当前位置 进行转场              app当前所在vc已知 (本地固定代码位置）
+    case global    // 全局环境 一般用于推送,任意初始位置转场      app当前所在vc未知 (比如点击推送)
 }
 
 // URLNavigator导航时起点  注册时,调用时申明 其中优先级 调用时 > 注册时
 enum URLNavigatorOrigin {
-    case tabBar(Int) // 先选择TabbarIndex 1.目标第一个 pop  2.非第一个 先popToRoot 再push    不做：2.中间的 初始化新的再pop 3.最后一个 push新的  删除旧的  4.不存在 popToRoot 再push
+    case tabBar(Int) // 选择TabbarIndex 1.目标第一个 pop  2.非第一个 先popToRootVC 再push    不做无效：2.中间的 初始化新的再pop 3.最后一个 push新的  删除旧的  4.不存在 popToRootVC 再push
 }
 
-// URLNavigator导航行为  注册时,调用时申明 其中优先级 调用时 > 注册时
+// URLNavigator导航行为   注册时,调用时申明 其中优先级 调用时 > 注册时
 enum URLNavigatorAction {
-    case push_pop // 自动push pop(规则：1.目的vc在当前UINavigatorController中首位，popToRoot 2.非1条件，先popToRoot，再push目的vc)
-    case push     // 直接push  用于本地
-    case present  //
+    case push_pop // 自动push pop(规则：1.目的vc在当前UINavigatorController中首位，popToRootVC 2.非1条件，先popToRootVC，再push目的vc)
+    case push     // 直接push     用于本地
+    case present  // 
     case custom
 }
 
