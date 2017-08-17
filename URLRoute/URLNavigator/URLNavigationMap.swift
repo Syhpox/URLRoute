@@ -34,7 +34,7 @@ struct URLNavigationMap {
             return TestViewController()
         }
         // 内链  present
-        Navigator.register("testApp://test1", action: .push) { (data) in
+        Navigator.register("testApp://test1", action: .present) { (data) in
             return TestViewController()
         }
         
@@ -61,7 +61,7 @@ struct URLNavigationMap {
             let view = NavigatorTestView.init(frame: .zero)
             view.backgroundColor = .brown
             view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
-            let naVC = URLNavigatorViewController.init(view)
+            let naVC = PresentCustomViewController.init(view, type: .system)
             return naVC
         }
 

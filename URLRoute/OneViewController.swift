@@ -29,10 +29,9 @@ class OneViewController: UIViewController {
         let view = NavigatorTestView.init(frame: .zero)
         view.backgroundColor = .brown
         view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
-        let naVC = URLNavigatorViewController.init(view)
-        self.present(naVC, animated: true, completion: nil)
-
-//        Navigator.show("testApp://urlNavigator", title: "测试提示title")
+        let naVC = PresentCustomViewController(view, type: .system)
+        naVC.present()
+//        self.present(naVC, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {

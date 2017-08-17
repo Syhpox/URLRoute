@@ -7,20 +7,39 @@
 //
 
 import UIKit
+enum PresentCustomViewControllerAnimation: Int {
+    case system // 系统Alert样式
+    case mode_0 // 上下动画
+    case mode_1 // fade 透明度
+}
 
-class URLNavigatorViewController: UIViewController {
-    var mainView: UIView!
-    var delegate: NavigatorPresentationController!
+class PresentCustomViewController: UIViewController {
+    /// 核心视图
+    fileprivate var mainView: UIView!
+    
+    /// present代理
+    fileprivate var delegate: PresentCustomPresentationController!
+    
+    /// 动画类型
+    var animateType: PresentCustomViewControllerAnimation = .system
+    
+    /// 动画持续时间
+    var duration: TimeInterval!
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    convenience init(_ mainView: UIView) {
+    convenience init(_ mainView: UIView, type: PresentCustomViewControllerAnimation = .system, duration: TimeInterval = 0.35) {
         self.init(nibName: nil, bundle: nil)
-        self.delegate = NavigatorPresentationController.init(presentedViewController: self, presenting: UIViewController.topMost)
+        self.delegate = PresentCustomPresentationController.init(presentedVC: self, presenting: UIViewController.topMost)
         self.transitioningDelegate = self.delegate
         self.mainView = mainView
+        self.animateType = type
+        self.duration = duration
+        
+        mainView.center = CGPoint(x: self.view.frame.width / 2.0, y: self.view.frame.height / 2.0)
+        view.addSubview(mainView)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -30,37 +49,32 @@ class URLNavigatorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.clear
-        mainView.center = CGPoint(x: self.view.frame.width / 2.0, y: self.view.frame.height / 2.0)
-        view.addSubview(mainView)
-        
-//        let btn2 = UIButton.init(type: .system)
-//        btn2.frame = CGRect(x: 100, y: 300, width: 200, height: 50)
-//        btn2.backgroundColor = .lightGray
-//        btn2.setTitle("dismiss", for: .normal)
-//        btn2.setTitleColor(.black, for: .normal)
-//        self.view.addSubview(btn2)
-//        btn2.addTarget(self, action: #selector(btnClick2), for: .touchUpInside)
-    }
-    
-    func btnClick2() {
-//        self.dismiss(animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func present() {
+        UIViewController.topMost?.present(self, animated: true, completion: nil)
+    }
 }
 
-class NavigatorPresentationController: UIPresentationController, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+fileprivate class PresentCustomPresentationController: UIPresentationController, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
     
     fileprivate var bgView: UIView!
+    fileprivate var presentedVC: PresentCustomViewController!
     
-    override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
+    private override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         presentedViewController.modalPresentationStyle = .custom
     }
     
+    convenience init(presentedVC: PresentCustomViewController, presenting presentingVC: UIViewController?) {
+        self.init(presentedViewController: presentedVC, presenting: presentingVC)
+        self.presentedVC = presentedVC
+    }
     
     override func presentationTransitionWillBegin() {
         bgView = UIView.init(frame: (containerView?.bounds)!)
@@ -98,7 +112,8 @@ class NavigatorPresentationController: UIPresentationController, UIViewControlle
     
     // MARK: UIViewControllerAnimatedTransitioning
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.35
+        // 动画时间
+        return presentedVC.duration
     }
     
     // This method can only  be a nop if the transition is interactive and not a percentDriven interactive transition.
@@ -127,19 +142,46 @@ class NavigatorPresentationController: UIPresentationController, UIViewControlle
             fromViewFinalFrame = fromView.frame.offsetBy(dx: 0, dy: fromView.frame.height)
         }
         
-        
-//        fromView.alpha = 1.0
-//        toView.alpha = 0.0
-        
-        let duration = self.transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: duration, animations: {
-//            fromView.alpha = 0
-//            toView.alpha = 1.0
+        // 动画时间
+        let duration = presentedVC.duration
+
+        switch presentedVC.animateType {
+        case .system:
             if isPresenting {
                 toView.frame = toViewFinalFrame
+                toView.alpha = 0.0
             } else {
                 fromView.frame = fromViewFinalFrame
+                fromView.alpha = 1.0
             }
+            presentedVC.mainView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+        case .mode_0: break
+        case .mode_1:
+            if isPresenting {
+                toView.frame = toViewFinalFrame
+                toView.alpha = 0.0
+            } else {
+                fromView.frame = fromViewFinalFrame
+                fromView.alpha = 1.0
+            }
+
+        }
+        
+        UIView.animate(withDuration: duration ?? 0.35, animations: {
+            switch self.presentedVC.animateType {
+            case .system:
+                self.presentedVC.mainView.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
+                (isPresenting ? toView : fromView)?.alpha = isPresenting ? 1.0 : 0.0
+            case .mode_0:
+                if isPresenting {
+                    toView.frame = toViewFinalFrame
+                } else {
+                    fromView.frame = fromViewFinalFrame
+                }
+            case .mode_1:
+                (isPresenting ? toView : fromView)?.alpha = isPresenting ? 1.0 : 0.0
+            }
+
         }) { (finish) in
             let cancel = transitionContext.transitionWasCancelled
             transitionContext.completeTransition(!cancel)
