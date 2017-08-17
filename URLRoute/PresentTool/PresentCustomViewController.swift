@@ -9,7 +9,7 @@
 import UIKit
 enum PresentCustomViewControllerAnimation: Int {
     case system // 系统Alert样式
-    case mode_0 // 上下动画
+    case mode_0 // 下到上动画
     case mode_1 // fade 透明度
 }
 
