@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NavigatorTestView: UIView {
+class NavigatorTestView: PresentCustomView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,11 +26,22 @@ class NavigatorTestView: UIView {
         let v = NSLayoutConstraint.constraints(withVisualFormat: "V:|-100-[btn2(50)]", options: NSLayoutFormatOptions.alignmentMask, metrics: nil, views: ["btn2":btn2])
         self.addConstraints(h)
         self.addConstraints(v)
-        
     }
     
     func btnClick2() {
         UIViewController.topMost?.dismiss(animated: true, completion: nil)
+    }
+    
+    override func animatedBegin() {
+        self.frame = CGRect(x: 0, y: 200, width: 200, height: 200)
+    }
+    
+    override func animated() {
+        self.frame = CGRect(x: 0, y: 400, width: 200, height: 200)
+    }
+    
+    override func animatedDismiss() {
+        self.frame = CGRect(x: 100, y: 400, width: 200, height: 200)
     }
 
     required init?(coder aDecoder: NSCoder) {

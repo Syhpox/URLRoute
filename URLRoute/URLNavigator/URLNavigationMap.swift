@@ -61,7 +61,7 @@ struct URLNavigationMap {
             let view = NavigatorTestView.init(frame: .zero)
             view.backgroundColor = .brown
             view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
-            let naVC = PresentCustomViewController.init(view, type: .system)
+            let naVC = PresentCustomViewController.init(view, type: .alert)
             return naVC
         }
 

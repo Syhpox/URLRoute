@@ -25,11 +25,12 @@ class OneViewController: UIViewController {
         btn.addTarget(self, action: #selector(btnClick), for: .touchUpInside)
 
     }
+    
     func btnClick() {
         let view = NavigatorTestView.init(frame: .zero)
         view.backgroundColor = .brown
         view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
-        let naVC = PresentCustomViewController(view, type: .system)
+        let naVC = PresentCustomViewController(view, type: .actionSheet)
         naVC.present()
 //        self.present(naVC, animated: true, completion: nil)
     }

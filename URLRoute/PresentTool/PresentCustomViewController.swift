@@ -7,10 +7,29 @@
 //
 
 import UIKit
+class PresentCustomView: UIView {
+    
+    func animatedBegin() {
+        
+    }
+    
+    func animated() {
+        
+    }
+    
+    func animatedDismiss() {
+        
+    }
+}
+/// 动画样式
 enum PresentCustomViewControllerAnimation: Int {
-    case system // 系统Alert样式
-    case mode_0 // 下到上动画
-    case mode_1 // fade 透明度
+    case alert          // 系统Alert样式
+    case actionSheet    // 系统actionSheet样式
+    
+    case mode_0         // 下到上
+    case mode_1         // fade 透明度
+    
+    case custom
 }
 
 class PresentCustomViewController: UIViewController {
@@ -21,16 +40,16 @@ class PresentCustomViewController: UIViewController {
     fileprivate var delegate: PresentCustomPresentationController!
     
     /// 动画类型
-    var animateType: PresentCustomViewControllerAnimation = .system
+    var animateType: PresentCustomViewControllerAnimation = .alert
     
     /// 动画持续时间
     var duration: TimeInterval!
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    fileprivate override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    convenience init(_ mainView: UIView, type: PresentCustomViewControllerAnimation = .system, duration: TimeInterval = 0.35) {
+    convenience init(_ mainView: UIView, type: PresentCustomViewControllerAnimation = .alert, duration: TimeInterval = 0.35) {
         self.init(nibName: nil, bundle: nil)
         self.delegate = PresentCustomPresentationController.init(presentedVC: self, presenting: UIViewController.topMost)
         self.transitioningDelegate = self.delegate
@@ -38,7 +57,6 @@ class PresentCustomViewController: UIViewController {
         self.animateType = type
         self.duration = duration
         
-        mainView.center = CGPoint(x: self.view.frame.width / 2.0, y: self.view.frame.height / 2.0)
         view.addSubview(mainView)
     }
     
@@ -50,7 +68,7 @@ class PresentCustomViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.clear
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -58,6 +76,10 @@ class PresentCustomViewController: UIViewController {
     
     func present() {
         UIViewController.topMost?.present(self, animated: true, completion: nil)
+    }
+    
+    func dismiss() {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -90,12 +112,12 @@ fileprivate class PresentCustomPresentationController: UIPresentationController,
     
     /// dismiss刚开始
     override func dismissalTransitionWillBegin() {
-        presentingViewController.transitionCoordinator?.animate(alongsideTransition: {[weak self] (context) in
+        self.presentingViewController.transitionCoordinator?.animate(alongsideTransition: {[weak self] (context) in
             self?.bgView.alpha = 0.0
             }, completion: { (context) in
         })
     }
-
+    
     // MARK: UIViewControllerTransitioningDelegate
     @available(iOS 2.0, *)
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -127,83 +149,92 @@ fileprivate class PresentCustomPresentationController: UIPresentationController,
         let toView: UIView! = transitionContext.view(forKey: .to)
         
         let isPresenting = fromVC == self.presentingViewController
-//        let fromViewInitFrame = transitionContext.initialFrame(for: fromVC!)
-        var fromViewFinalFrame = transitionContext.finalFrame(for: fromVC!)
-        var toViewInitFrame = transitionContext.initialFrame(for: toVC!)
+        //        let fromViewInitFrame = transitionContext.initialFrame(for: fromVC!)
+//        var fromViewFinalFrame = transitionContext.finalFrame(for: fromVC!)
+        //        var toViewInitFrame = transitionContext.initialFrame(for: toVC!)
         let toViewFinalFrame = transitionContext.finalFrame(for: toVC!)
         
         containView.addSubview(isPresenting ? toView : fromView)
         
+        let normalFrame = CGRect(origin: CGPoint(x: containView.bounds.minX, y: containView.bounds.minY), size: toViewFinalFrame.size)
         if isPresenting {
-            toViewInitFrame.origin = CGPoint(x: containView.bounds.minX, y: containView.bounds.maxY)
-            toViewInitFrame.size = toViewFinalFrame.size
-            toView.frame = toViewInitFrame
+            toView.frame = normalFrame
         } else {
-            fromViewFinalFrame = fromView.frame.offsetBy(dx: 0, dy: fromView.frame.height)
+            fromView.frame = normalFrame
         }
         
         // 动画时间
         let duration = presentedVC.duration
-
+        
         switch presentedVC.animateType {
-        case .system:
+        case .alert:
             if isPresenting {
-                toView.frame = toViewFinalFrame
-                toView.alpha = 0.0
-            } else {
-                fromView.frame = fromViewFinalFrame
-                fromView.alpha = 1.0
+                presentedVC.mainView.center = CGPoint(x: presentedVC.view.frame.width / 2.0, y: presentedVC.view.frame.height / 2.0)
+                presentedVC.mainView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
             }
-            presentedVC.mainView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
-        case .mode_0: break
+        case .actionSheet:
+            let frameHeight = presentedVC.view.frame.height
+            let frameWidth = presentedVC.view.frame.width
+            if isPresenting {
+                presentedVC.mainView.frame = CGRect(x: (frameWidth - presentedVC.mainView.frame.width) / 2.0, y: frameHeight, width: presentedVC.mainView.frame.width, height: presentedVC.mainView.frame.height)
+            } else {
+                self.presentedVC.mainView.frame = CGRect(x: self.presentedVC.mainView.frame.origin.x, y: frameHeight - self.presentedVC.mainView.frame.height, width: self.presentedVC.mainView.frame.width, height: self.presentedVC.mainView.frame.height)
+            }
+        case .mode_0:
+            let changeY = isPresenting ? normalFrame.size.height + self.presentedVC.mainView.frame.size.height / 2.0 : normalFrame.size.height / 2.0
+            presentedVC.mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: changeY)
         case .mode_1:
+            (isPresenting ? toView : fromView)?.alpha = isPresenting ? 0.0 : 1.0
+            
+            presentedVC.mainView.center = CGPoint(x: presentedVC.view.frame.width / 2.0, y: presentedVC.view.frame.height / 2.0)
+        case .custom:
             if isPresenting {
-                toView.frame = toViewFinalFrame
-                toView.alpha = 0.0
+                (presentedVC.mainView as? PresentCustomView)?.animatedBegin()
             } else {
-                fromView.frame = fromViewFinalFrame
-                fromView.alpha = 1.0
+                (self.presentedVC.mainView as? PresentCustomView)?.animated()
+                
             }
-
         }
         
+        // 动画中
         UIView.animate(withDuration: duration ?? 0.35, animations: {
             switch self.presentedVC.animateType {
-            case .system:
-                self.presentedVC.mainView.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
+            case .alert:
                 (isPresenting ? toView : fromView)?.alpha = isPresenting ? 1.0 : 0.0
+                if isPresenting {
+                    self.presentedVC.mainView.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
+                }
+            case .actionSheet:
+                let frameHeight = self.presentedVC.view.frame.height
+                let frameWidth = self.presentedVC.view.frame.width
+                if !isPresenting {
+                    self.presentedVC.mainView.frame = CGRect(x: (frameWidth - self.presentedVC.mainView.frame.width) / 2.0, y: frameHeight, width: self.presentedVC.mainView.frame.width, height: self.presentedVC.mainView.frame.height)
+                } else {
+                    self.presentedVC.mainView.frame = CGRect(x: self.presentedVC.mainView.frame.origin.x, y: frameHeight - self.presentedVC.mainView.frame.height, width: self.presentedVC.mainView.frame.width, height: self.presentedVC.mainView.frame.height)
+                }
+                
             case .mode_0:
                 if isPresenting {
-                    toView.frame = toViewFinalFrame
+                    self.presentedVC.mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: normalFrame.size.height / 2.0)
                 } else {
-                    fromView.frame = fromViewFinalFrame
+                    self.presentedVC.mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: normalFrame.size.height + self.presentedVC.mainView.frame.size.height / 2.0)
                 }
             case .mode_1:
                 (isPresenting ? toView : fromView)?.alpha = isPresenting ? 1.0 : 0.0
+            case .custom:
+                if isPresenting {
+                    (self.presentedVC.mainView as? PresentCustomView)?.animated()
+                } else {
+                    (self.presentedVC.mainView as? PresentCustomView)?.animatedDismiss()
+                }
             }
-
+            
         }) { (finish) in
             let cancel = transitionContext.transitionWasCancelled
             transitionContext.completeTransition(!cancel)
         }
         
     }
-
-
+    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
