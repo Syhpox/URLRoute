@@ -32,103 +32,118 @@ class URLNavigator {
         self.mapDic[pattern.key!] = pattern
     }
     
-    @discardableResult
-    func show(_ url: String?, context: URLNavigatorContext = .local, origin: URLNavigatorOrigin? = nil, action: URLNavigatorAction? = nil,title: String? = nil, localDic: [String: Any] = [:], animated: Bool = true, complete: URLCompleteHandler? = nil) -> Bool {
+    /// show
+    func show(_ url: String?, context: URLNavigatorContext = .local, origin: URLNavigatorOrigin? = nil, action: URLNavigatorAction? = nil,title: String? = nil, localDic: [String: Any] = [:], animated: Bool = true, complete: URLCompleteHandler? = nil) {
         // url 空判断
         guard url != nil && url != "" else {
             NavigatorError.emptyUrl.log()
-            return false
+            return
         }
         // 解析url
         var urlData = URLAnalysis.analysis(url!)
         guard urlData.scheme != nil && urlData.key != nil else {
             NavigatorError.errorUrl.log()
-            return false
+            return
         }
         // 获取本地注册的路由pattern
         if let patternItem = mapDic[urlData.key!] {
             var currentVC = UIViewController.topMost
             guard currentVC != nil else {
                 NavigatorError.emptyVC.log()
-                return false
+                return
             }
-            
-            // 起点
-            if let available_origin = origin ?? patternItem.navigatorOrigin {
-                switch available_origin {
-                case .tabBar(let index):
-                    if currentVC?.tabBarController != nil && (currentVC?.tabBarController?.viewControllers?.count)! >= index + 1 {
-                        currentVC?.tabBarController?.selectedIndex = index
-                    } else {
-                        NavigatorError.errorTabBar.log()
-                        return false
-                    }
-                }
-            }
-            
-            // 使用场景
-            switch context {
-            case .local:
-                currentVC = UIViewController.topMost
-            case .global:
-                let currentVC_tab = UIViewController.topMost
-                currentVC_tab?.navigationController?.popToRootViewController(animated: false)
-                currentVC = UIViewController.topMost
-            }
-            
-            guard currentVC != nil else {
-                NavigatorError.emptyVC.log()
-                return false
-            }
-            
-            if let hander = patternItem.handler {
-                // vc title 统一处理
-                urlData.localDic = localDic;
-                if title != nil {
-                    urlData.localDic["vc_title"] = title;
-                }
-                if let vc = hander(urlData) {
-                    if let dicTitle = urlData.localDic["vc_title"] as? String {
-                        vc.title = dicTitle
-                    }
-                    // 跳转方式 导航行为
-                    let available_action = action ?? patternItem.navigatorAction
-                    switch available_action! {
-                    case .push_pop:
-                        if context == .local {
-                            // 本地环境直接push
-                            currentVC?.navigationController?.pushViewController(vc, animated: animated)
+            // 处理方式代码块
+            let dealBlc = {
+                // 起点
+                if let available_origin = origin ?? patternItem.navigatorOrigin {
+                    switch available_origin {
+                    case .tabBar(let index):
+                        if currentVC?.tabBarController != nil && (currentVC?.tabBarController?.viewControllers?.count)! >= index + 1 {
+                            currentVC?.tabBarController?.selectedIndex = index
                         } else {
-                            // 自动跳转  1.目标第一个 pop  2.非第一个 先popToRootVC 再push
-                            if (currentVC?.navigationController?.viewControllers.first?.isKind(of: vc.classForCoder))! {
-                                currentVC?.navigationController?.popToRootViewController(animated: animated)
-                            } else {
-                                currentVC?.navigationController?.popToRootViewController(animated: false)
-                                UIViewController.topMost?.navigationController?.pushViewController(vc, animated: animated)
-                            }
+                            NavigatorError.errorTabBar.log()
+                            return
                         }
-                    case .push:
-                        currentVC?.navigationController?.pushViewController(vc, animated: animated)
-                    case .present:
-                        currentVC?.present(vc, animated: animated, completion: nil)
                     }
+                }
+                
+                // 使用场景
+                switch context {
+                case .local:
+                    currentVC = UIViewController.topMost
+                case .global:
+                    let currentVC_tab = UIViewController.topMost
+                    currentVC_tab?.navigationController?.popToRootViewController(animated: false)
+                    currentVC = UIViewController.topMost
+                }
+                
+                guard currentVC != nil else {
+                    NavigatorError.emptyVC.log()
+                    return
+                }
+                
+                if let hander = patternItem.handler {
+                    // vc title 统一处理
+                    urlData.localDic = localDic;
+                    if title != nil {
+                        urlData.localDic["vc_title"] = title;
+                    }
+                    if let vc = hander(urlData) {
+                        if let dicTitle = urlData.localDic["vc_title"] as? String {
+                            vc.title = dicTitle
+                        }
+                        // 跳转方式 导航行为
+                        let available_action = action ?? patternItem.navigatorAction
+                        switch available_action! {
+                        case .push_pop:
+                            if context == .local {
+                                // 本地环境直接push
+                                if (currentVC?.navigationController?.viewControllers.first?.isKind(of: vc.classForCoder))! {
+                                } else {
+                                    currentVC?.navigationController?.pushViewController(vc, animated: animated)
+                                }
+                            } else {
+                                // 自动跳转  1.目标第一个 pop  2.非第一个 先popToRootVC 再push
+                                if (currentVC?.navigationController?.viewControllers.first?.isKind(of: vc.classForCoder))! {
+                                    currentVC?.navigationController?.popToRootViewController(animated: animated)
+                                } else {
+                                    currentVC?.navigationController?.popToRootViewController(animated: false)
+                                    UIViewController.topMost?.navigationController?.pushViewController(vc, animated: animated)
+                                }
+                            }
+                        case .push:
+                            if (currentVC?.navigationController?.viewControllers.first?.isKind(of: vc.classForCoder))! {
+                            } else {
+                                currentVC?.navigationController?.pushViewController(vc, animated: animated)
+                            }
+                        case .present:
+                            currentVC?.present(vc, animated: animated, completion: nil)
+                        }
+                    }
+                }
+                
+                if let clouse = complete {
+                    clouse(urlData)
                 }
             }
             
-            if let clouse = complete {
-                clouse(urlData)
+            if currentVC?.presentingViewController != nil {
+                currentVC?.dismiss(animated: false, completion: {
+                    currentVC = UIViewController.topMost
+                    dealBlc()
+                })
+                return
             }
-            return true
+            dealBlc()
+            
         } else {
             NavigatorError.errorKey.log()
         }
-        
-        return false
     }
     
     /// 赋值block 代码块内容
     func addBlock(_ mark: String, block: @escaping ([String: Any]) -> Void) {
-//        assert(Navigator.urlHandles[mark] == nil, "mark 注册重复了 更名吧")
+        //        assert(Navigator.urlHandles[mark] == nil, "mark 注册重复了 更名吧")
         // 直接覆盖以前的
         Navigator.urlHandles[mark] = block
     }
@@ -151,7 +166,7 @@ enum NavigatorError: String {
     case errorKey = "[Navigator Error]: 未注册的key"
     case errorTabBar = "[Navigator Error]: tabBar设置Index越界或tabBar不存在"
     case emptyBlock = "[Navigator Error]: 未定义block，无法执行"
-
+    
     func log() {
         print(self.rawValue)
     }

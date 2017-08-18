@@ -29,8 +29,8 @@ class TestViewController: UIViewController {
     }
     
     func btnClick() {
-//        Navigator.show("testApp://test2", origin: .tabBar(1))
-        self.dismiss(animated: true, completion: nil)
+        Navigator.show("testApp://test2", origin: .tabBar(0))
+//        self.dismiss(animated: true, completion: nil)
     }
 
 
