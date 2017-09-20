@@ -24,6 +24,8 @@
 		F878E4821F3EE3A500648FB3 /* TwoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F878E4811F3EE3A500648FB3 /* TwoViewController.swift */; };
 		F878E4841F3EE3B900648FB3 /* ThreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F878E4831F3EE3B900648FB3 /* ThreeViewController.swift */; };
 		F880D79F1F446B34005F0B58 /* FourViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F880D79E1F446B34005F0B58 /* FourViewController.swift */; };
+		F8BF642D1F72414A0075B983 /* PresentionBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F8BF642C1F72414A0075B983 /* PresentionBaseViewController.m */; };
+		F8BF642F1F725F350075B983 /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BF642E1F725F350075B983 /* CustomViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,10 @@
 		F878E4811F3EE3A500648FB3 /* TwoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwoViewController.swift; sourceTree = "<group>"; };
 		F878E4831F3EE3B900648FB3 /* ThreeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreeViewController.swift; sourceTree = "<group>"; };
 		F880D79E1F446B34005F0B58 /* FourViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FourViewController.swift; sourceTree = "<group>"; };
+		F8BF642A1F72414A0075B983 /* URLRoute-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "URLRoute-Bridging-Header.h"; sourceTree = "<group>"; };
+		F8BF642B1F72414A0075B983 /* PresentionBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PresentionBaseViewController.h; sourceTree = "<group>"; };
+		F8BF642C1F72414A0075B983 /* PresentionBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PresentionBaseViewController.m; sourceTree = "<group>"; };
+		F8BF642E1F725F350075B983 /* CustomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +98,7 @@
 				F878E4811F3EE3A500648FB3 /* TwoViewController.swift */,
 				F878E4831F3EE3B900648FB3 /* ThreeViewController.swift */,
 				F880D79E1F446B34005F0B58 /* FourViewController.swift */,
+				F8BF642E1F725F350075B983 /* CustomViewController.swift */,
 			);
 			path = URLRoute;
 			sourceTree = "<group>";
@@ -112,6 +119,9 @@
 			children = (
 				F864C9881F456B4900918718 /* NavigatorTestView.swift */,
 				F864C9891F456B4900918718 /* PresentCustomViewController.swift */,
+				F8BF642B1F72414A0075B983 /* PresentionBaseViewController.h */,
+				F8BF642C1F72414A0075B983 /* PresentionBaseViewController.m */,
+				F8BF642A1F72414A0075B983 /* URLRoute-Bridging-Header.h */,
 			);
 			path = PresentTool;
 			sourceTree = "<group>";
@@ -149,6 +159,7 @@
 					F85FA0FA1EFB5DE1003950CA = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = 7CA2QSNJZ3;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -200,9 +211,11 @@
 				F864C9841F453B2F00918718 /* URLNavigation.swift in Sources */,
 				F85FA11E1EFB687A003950CA /* TestViewController.swift in Sources */,
 				F878E4821F3EE3A500648FB3 /* TwoViewController.swift in Sources */,
+				F8BF642D1F72414A0075B983 /* PresentionBaseViewController.m in Sources */,
 				F85FA1161EFB5E48003950CA /* URLNavigationMap.swift in Sources */,
 				F864C9851F453B2F00918718 /* URLNavigationPattern.swift in Sources */,
 				F85FA11C1EFB5F5D003950CA /* WebViewController.swift in Sources */,
+				F8BF642F1F725F350075B983 /* CustomViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,11 +340,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 7CA2QSNJZ3;
 				INFOPLIST_FILE = URLRoute/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.URLRoute;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "URLRoute/PresentTool/URLRoute-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -340,11 +356,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 7CA2QSNJZ3;
 				INFOPLIST_FILE = URLRoute/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.URLRoute;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "URLRoute/PresentTool/URLRoute-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

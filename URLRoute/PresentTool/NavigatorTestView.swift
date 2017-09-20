@@ -28,7 +28,7 @@ class NavigatorTestView: PresentCustomView {
         self.addConstraints(v)
     }
     
-    func btnClick2() {
+    @objc func btnClick2() {
         UIViewController.topMost?.dismiss(animated: true, completion: nil)
     }
     

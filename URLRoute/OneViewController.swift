@@ -27,12 +27,21 @@ class OneViewController: UIViewController {
     }
     
     func btnClick() {
-        let view = NavigatorTestView.init(frame: .zero)
-        view.backgroundColor = .brown
-        view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
-        let naVC = PresentCustomViewController(view, type: .actionSheet)
-        naVC.present()
+//        let view = NavigatorTestView.init(frame: .zero)
+//        view.backgroundColor = .brown
+//        view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
+//        let naVC = PresentCustomViewController(view, type: .actionSheet)
+//        naVC.present()
 //        self.present(naVC, animated: true, completion: nil)
+//        return
+        let testVC = CustomViewController.init(presentingVC: self)
+        self.present(testVC!, animated: true, completion: nil)
+        testVC?.blc = {
+            
+            self.btnClick()
+//            let testVC = CustomViewController.init(presentingVC: self)
+//            self.present(testVC!, animated: true, completion: nil)
+        }
     }
 
     override func didReceiveMemoryWarning() {
