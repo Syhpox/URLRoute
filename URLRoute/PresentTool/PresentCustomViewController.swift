@@ -7,61 +7,61 @@
 //
 
 import UIKit
-class PresentCustomView: UIView {
-    
-    func animatedBegin() {
-        
-    }
-    
-    func animated() {
-        
-    }
-    
-    func animatedDismiss() {
-        
-    }
+/// 自定义弹出动画接口协议
+protocol PresentCustomViewControllerAnimationProtocol {
+    /// 刚弹出  动画初始状态
+    func animatedBegin()
+    /// 刚弹出  动画末状态
+    func animated()
+    /// 弹回消失 动画末状态
+    func animatedDismiss()
 }
 /// 动画样式
-enum PresentCustomViewControllerAnimation: Int {
+enum PresentCustomViewControllerAnimation {
     case alert          // 系统Alert样式
     case actionSheet    // 系统actionSheet样式
     
     case mode_0         // 下到上
     case mode_1         // fade 透明度
     
-    case custom
+    case custom(PresentCustomViewControllerAnimationProtocol)
 }
 
 class PresentCustomViewController: UIViewController {
     /// 核心视图
-    fileprivate var mainView: UIView!
+    open var mainView: UIView!
     
     /// present代理
     fileprivate var delegate: PresentCustomPresentationController!
     
     /// 动画类型
-    var animateType: PresentCustomViewControllerAnimation = .alert
+    var animationType: PresentCustomViewControllerAnimation = .alert
     
     /// 动画持续时间
     var duration: TimeInterval!
     
-    fileprivate override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    /// 结束block
+    var completeBlc:(() -> Void)?
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    convenience init(_ mainView: UIView, type: PresentCustomViewControllerAnimation = .alert, duration: TimeInterval = 0.35) {
-        self.init(nibName: nil, bundle: nil)
-        self.delegate = PresentCustomPresentationController.init(presentedVC: self, presenting: UIViewController.topMost)
+    init(presentingVC: UIViewController, type: PresentCustomViewControllerAnimation = .alert, duration: TimeInterval = 0.35) {
+        super.init(nibName: nil, bundle: nil)
+        self.delegate = PresentCustomPresentationController.init(presentedVC: self, presenting: presentingVC)
         self.transitioningDelegate = self.delegate
-        self.mainView = mainView
-        self.animateType = type
+        self.animationType = type
         self.duration = duration
-        
-        view.addSubview(mainView)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.delegate = nil
     }
     
     override func viewDidLoad() {
@@ -74,19 +74,22 @@ class PresentCustomViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func present() {
-        UIViewController.topMost?.present(self, animated: true, completion: nil)
-    }
-    
-    func dismiss() {
-        self.dismiss(animated: true, completion: nil)
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        super.dismiss(animated: flag) {
+            if completion != nil {
+                completion!()
+            }
+            if let blc = self.completeBlc {
+                blc()
+            }
+        }
     }
 }
 
 fileprivate class PresentCustomPresentationController: UIPresentationController, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
     
     fileprivate var bgView: UIView!
-    fileprivate var presentedVC: PresentCustomViewController!
+    fileprivate weak var presentedVC: PresentCustomViewController!
     
     private override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
@@ -166,7 +169,7 @@ fileprivate class PresentCustomPresentationController: UIPresentationController,
         // 动画时间
         let duration = presentedVC.duration
         
-        switch presentedVC.animateType {
+        switch presentedVC.animationType {
         case .alert:
             if isPresenting {
                 presentedVC.mainView.center = CGPoint(x: presentedVC.view.frame.width / 2.0, y: presentedVC.view.frame.height / 2.0)
@@ -187,18 +190,17 @@ fileprivate class PresentCustomPresentationController: UIPresentationController,
             (isPresenting ? toView : fromView)?.alpha = isPresenting ? 0.0 : 1.0
             
             presentedVC.mainView.center = CGPoint(x: presentedVC.view.frame.width / 2.0, y: presentedVC.view.frame.height / 2.0)
-        case .custom:
+        case .custom(let animationView):
             if isPresenting {
-                (presentedVC.mainView as? PresentCustomView)?.animatedBegin()
+                animationView.animatedBegin()
             } else {
-                (self.presentedVC.mainView as? PresentCustomView)?.animated()
-                
+                animationView.animated()
             }
         }
         
         // 动画中
         UIView.animate(withDuration: duration ?? 0.35, animations: {
-            switch self.presentedVC.animateType {
+            switch self.presentedVC.animationType {
             case .alert:
                 (isPresenting ? toView : fromView)?.alpha = isPresenting ? 1.0 : 0.0
                 if isPresenting {
@@ -221,11 +223,11 @@ fileprivate class PresentCustomPresentationController: UIPresentationController,
                 }
             case .mode_1:
                 (isPresenting ? toView : fromView)?.alpha = isPresenting ? 1.0 : 0.0
-            case .custom:
+            case .custom(let animationView):
                 if isPresenting {
-                    (self.presentedVC.mainView as? PresentCustomView)?.animated()
+                    animationView.animated()
                 } else {
-                    (self.presentedVC.mainView as? PresentCustomView)?.animatedDismiss()
+                    animationView.animatedDismiss()
                 }
             }
             

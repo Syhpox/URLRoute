@@ -10,8 +10,6 @@ import UIKit
 
 class CustomViewController: PresentionBaseViewController {
     
-    var blc:(() -> Void)!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.animationType = .actionSheet
@@ -26,18 +24,16 @@ class CustomViewController: PresentionBaseViewController {
         btn.frame = CGRect(x: 0, y: 0, width: 60, height: 30)
         test.addSubview(btn)
         btn.addTarget(self, action: #selector(btnClick), for: .touchUpInside)
+        
     }
     
     @objc func btnClick() {
-        self.dismiss(animated: true) {
-            self.blc()
-        }
+        self.dismiss(animated: true, completion: nil)
     }
-
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
 }

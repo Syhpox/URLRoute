@@ -59,7 +59,9 @@ class URLNavigator {
                     switch available_origin {
                     case .tabBar(let index):
                         if currentVC?.tabBarController != nil && (currentVC?.tabBarController?.viewControllers?.count)! >= index + 1 {
-                            currentVC?.tabBarController?.selectedIndex = index
+                            if currentVC?.tabBarController?.selectedIndex != index {
+                                currentVC?.tabBarController?.selectedIndex = index
+                            }
                         } else {
                             NavigatorError.errorTabBar.log()
                             return

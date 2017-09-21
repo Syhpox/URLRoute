@@ -56,14 +56,14 @@ struct URLNavigationMap {
         }
         
         // 本地使用，不路由
-        Navigator.register("testApp://urlNavigator", action: .present) { (data) -> UIViewController? in
-            
-            let view = NavigatorTestView.init(frame: .zero)
-            view.backgroundColor = .brown
-            view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
-            let naVC = PresentCustomViewController.init(view, type: .alert)
-            return naVC
-        }
+//        Navigator.register("testApp://urlNavigator", action: .present) { (data) -> UIViewController? in
+//            
+//            let view = NavigatorTestView.init(frame: .zero)
+//            view.backgroundColor = .brown
+//            view.frame = CGRect(x: 0, y: 100, width: 200, height: 200)
+//            let naVC = PresentCustomViewController.init(view, type: .alert)
+//            return naVC
+//        }
 
     }
 }

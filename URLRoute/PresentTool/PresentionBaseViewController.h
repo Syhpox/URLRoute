@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger, PresentionBaseAnimation) {
 @property (nonatomic, strong) PresentationBaseController *delegate;
 @property (nonatomic, assign) PresentionBaseAnimation animationType; // 动画样式
 @property (nonatomic, assign) NSTimeInterval duration; // 动画时间
+@property (nonatomic, strong) void (^completeBlc)();
 - (instancetype)initWithPresentingVC: (UIViewController *)presentingVC;
 @end
 @interface PresentationBaseController : UIPresentationController <UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning>

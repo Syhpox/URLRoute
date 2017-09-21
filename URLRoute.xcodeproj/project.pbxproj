@@ -18,7 +18,6 @@
 		F864C9841F453B2F00918718 /* URLNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864C9811F453B2F00918718 /* URLNavigation.swift */; };
 		F864C9851F453B2F00918718 /* URLNavigationPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864C9821F453B2F00918718 /* URLNavigationPattern.swift */; };
 		F864C9861F453B2F00918718 /* URLNavigatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864C9831F453B2F00918718 /* URLNavigatorData.swift */; };
-		F864C98A1F456B4900918718 /* NavigatorTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864C9881F456B4900918718 /* NavigatorTestView.swift */; };
 		F864C98B1F456B4900918718 /* PresentCustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864C9891F456B4900918718 /* PresentCustomViewController.swift */; };
 		F878E4801F3EE37C00648FB3 /* OneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F878E47F1F3EE37C00648FB3 /* OneViewController.swift */; };
 		F878E4821F3EE3A500648FB3 /* TwoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F878E4811F3EE3A500648FB3 /* TwoViewController.swift */; };
@@ -42,7 +41,6 @@
 		F864C9811F453B2F00918718 /* URLNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLNavigation.swift; sourceTree = "<group>"; };
 		F864C9821F453B2F00918718 /* URLNavigationPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLNavigationPattern.swift; sourceTree = "<group>"; };
 		F864C9831F453B2F00918718 /* URLNavigatorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLNavigatorData.swift; sourceTree = "<group>"; };
-		F864C9881F456B4900918718 /* NavigatorTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorTestView.swift; sourceTree = "<group>"; };
 		F864C9891F456B4900918718 /* PresentCustomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentCustomViewController.swift; sourceTree = "<group>"; };
 		F878E47F1F3EE37C00648FB3 /* OneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneViewController.swift; sourceTree = "<group>"; };
 		F878E4811F3EE3A500648FB3 /* TwoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwoViewController.swift; sourceTree = "<group>"; };
@@ -117,7 +115,6 @@
 		F864C9871F456B4900918718 /* PresentTool */ = {
 			isa = PBXGroup;
 			children = (
-				F864C9881F456B4900918718 /* NavigatorTestView.swift */,
 				F864C9891F456B4900918718 /* PresentCustomViewController.swift */,
 				F8BF642B1F72414A0075B983 /* PresentionBaseViewController.h */,
 				F8BF642C1F72414A0075B983 /* PresentionBaseViewController.m */,
@@ -204,7 +201,6 @@
 				F864C9861F453B2F00918718 /* URLNavigatorData.swift in Sources */,
 				F85FA1011EFB5DE1003950CA /* ViewController.swift in Sources */,
 				F880D79F1F446B34005F0B58 /* FourViewController.swift in Sources */,
-				F864C98A1F456B4900918718 /* NavigatorTestView.swift in Sources */,
 				F878E4841F3EE3B900648FB3 /* ThreeViewController.swift in Sources */,
 				F85FA0FF1EFB5DE1003950CA /* AppDelegate.swift in Sources */,
 				F864C98B1F456B4900918718 /* PresentCustomViewController.swift in Sources */,

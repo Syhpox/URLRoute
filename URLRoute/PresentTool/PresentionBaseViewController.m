@@ -16,11 +16,28 @@
 - (instancetype)initWithPresentingVC: (UIViewController *)presentingVC {
     if (self = [super init]) {
         self.animationType = PresentionBaseAnimationAlert;
-        self.duration = 0.5;
+        self.duration = 0.3;
+
         self.delegate = [[PresentationBaseController alloc] initWithPresentedViewController:self presentingViewController:presentingVC];
         self.transitioningDelegate  = self.delegate;
     }
     return self;
+}
+
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion {
+    [super dismissViewControllerAnimated:flag completion:^{
+        if (completion != nil) {
+            completion();
+        }
+        if (_completeBlc != nil) {
+            _completeBlc();
+        }
+    }];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.delegate = nil;
 }
 
 - (void)viewDidLoad {
@@ -37,7 +54,7 @@
 @end
 @interface PresentationBaseController  ()
 @property (nonatomic, strong) UIView *bgView;
-@property (nonatomic, strong) PresentionBaseViewController *presentedVC;
+@property (nonatomic, weak) PresentionBaseViewController *presentedVC;
 @end
 
 @implementation PresentationBaseController
