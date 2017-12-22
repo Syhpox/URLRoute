@@ -86,7 +86,7 @@ class PresentCustomViewController: UIViewController {
     }
 }
 
-fileprivate class PresentCustomPresentationController: UIPresentationController, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+class PresentCustomPresentationController: UIPresentationController, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
     
     fileprivate var bgView: UIView!
     fileprivate weak var presentedVC: PresentCustomViewController!

@@ -24,16 +24,11 @@ class OneViewController: UIViewController {
         self.view.addSubview(btn)
         btn.addTarget(self, action: #selector(btnClick), for: .touchUpInside)
         
-
     }
     
     func btnClick() {
-        let testVC = CustomViewController.init(presentingVC: self)
-        self.present(testVC!, animated: true, completion: nil)
-        testVC!.completeBlc = {
-            let testVC = CustomViewController.init(presentingVC: self)
-            self.present(testVC!, animated: true, completion: nil)
-        }
+        let testVC = CustomViewController.init(presentedVC: self)
+        self.present(testVC, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
