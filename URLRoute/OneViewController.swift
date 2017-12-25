@@ -27,8 +27,11 @@ class OneViewController: UIViewController {
     }
     
     func btnClick() {
-        let testVC = CustomViewController.init(presentedVC: self)
-        self.present(testVC, animated: true, completion: nil)
+        let vc = FourViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+        
+//        let testVC = CustomViewController.init(presentingVC: self)
+//        self.present(testVC, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {

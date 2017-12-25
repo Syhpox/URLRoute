@@ -4,45 +4,91 @@
 //
 //  Created by WZH on 2017/12/22.
 //  Copyright © 2017年 Zhihua. All rights reserved.
-//
+//  PresentConfig v2.0
 
 import UIKit
-protocol PresentConfigProtocol {
+/// required protocol
+protocol PresentConfigProtocol  {
     var presentConfig: PresentConfig? {get set}
-    init(presentedVC: UIViewController)
+    /*
+     required init(presentingVC: UIViewController) {
+     super.init(nibName: nil, bundle: nil)
+     presentConfig = PresentConfig.init(self, presentingVC: presentingVC)
+     }
+     */
+    init(presentingVC: UIViewController)
+    
+}
+
+/// 自定义弹出动画接口协议
+protocol PresentConfigAnimationProtocol {
+    /// 刚弹出  动画初始状态
+    func animatedBegin()
+    /// 刚弹出  动画末状态
+    func animated()
+    /// 弹回消失 动画末状态
+    func animatedDismiss()
+}
+
+/// 动画样式
+enum PresentConfigAnimation {
+    case alert          // 系统Alert样式
+    case actionSheet    // 系统actionSheet样式
+    
+    case toUp         // 下到上
+    case fade           // fade 透明度
+    
+    case custom(PresentConfigAnimationProtocol)
 }
 
 class PresentConfig {
     /// 核心视图
     var mainView: UIView!
     
-    /// 核心VC
+    /// main_VC 被弹出的VC
     var mainViewController: UIViewController!
     
     /// present代理
-    fileprivate var delegate: PresentCustomPresentationControllerCC!
+    fileprivate var delegate: PresentConfigPresentationController!
     
     /// 动画类型
-    var animationType: PresentCustomViewControllerAnimation = .alert
+    var animationType: PresentConfigAnimation = .alert
     
     /// 动画持续时间
     var duration: TimeInterval!
     
-    /// 结束block
-    var completeBlc:(() -> Void)?
-    
-    init(_ mainViewController: UIViewController,presentingVC: UIViewController, type: PresentCustomViewControllerAnimation = .alert, duration: TimeInterval = 0.35) {
+    /**
+     初始化方法
+     - paramater mainViewController: 被弹出的VC
+     - paramater presentingVC:       弹出的VC
+     - paramater type:               动画类型
+     - paramater duration:           动画时间 = present时间 = dismiss时间
+     
+     - retrun
+     */
+    init(_ mainViewController: UIViewController,presentingVC: UIViewController, type: PresentConfigAnimation = .alert, duration: TimeInterval = 0.35) {
         self.mainViewController = mainViewController
-        self.delegate = PresentCustomPresentationControllerCC.init(presentConfig: self, presenting: presentingVC)
+        self.delegate = PresentConfigPresentationController.init(presentConfig: self, presenting: presentingVC)
         mainViewController.transitioningDelegate = delegate
         self.animationType = type
         self.duration = duration
+        // Custom初始化失败
+        switch type {
+        case .custom(let mainView):
+            if let vi = mainView as? UIView {
+                self.mainView = vi
+            } else {
+                assertionFailure("自定义动画view非UIView类")
+            }
+            break
+        default:
+            break;
+        }
     }
-
 }
 
 
-fileprivate class PresentCustomPresentationControllerCC: UIPresentationController, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+fileprivate class PresentConfigPresentationController: UIPresentationController, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
     
     fileprivate var bgView: UIView!
     fileprivate weak var presentConfig: PresentConfig!
@@ -50,13 +96,8 @@ fileprivate class PresentCustomPresentationControllerCC: UIPresentationControlle
     init(presentConfig: PresentConfig, presenting presentingViewController: UIViewController?) {
         super.init(presentedViewController: presentConfig.mainViewController, presenting: presentingViewController)
         self.presentConfig = presentConfig
-        presentConfig.mainViewController.modalPresentationStyle = .custom
+        self.presentConfig.mainViewController.modalPresentationStyle = .custom
     }
-    
-//    convenience init(presentConfig: PresentConfig, presenting presentingVC: UIViewController?) {
-//        self.init(presentConfig: PresentConfig, presenting: presentingVC)
-//        self.presentConfig = presentConfig
-//    }
     
     override func presentationTransitionWillBegin() {
         bgView = UIView.init(frame: (containerView?.bounds)!)
@@ -66,7 +107,6 @@ fileprivate class PresentCustomPresentationControllerCC: UIPresentationControlle
         presentingViewController.transitionCoordinator?.animate(alongsideTransition: {[weak self] (context) in
             self?.bgView.alpha = 1.0
             }, completion: { (context) in
-                
         })
     }
     
@@ -74,7 +114,10 @@ fileprivate class PresentCustomPresentationControllerCC: UIPresentationControlle
     override func dismissalTransitionWillBegin() {
         self.presentingViewController.transitionCoordinator?.animate(alongsideTransition: {[weak self] (context) in
             self?.bgView.alpha = 0.0
-            }, completion: { (context) in
+            }, completion: {[weak self] (context) in
+                // 内存释放
+                self?.presentConfig.mainViewController = nil
+                self?.presentConfig.delegate = nil
         })
     }
     
@@ -140,10 +183,10 @@ fileprivate class PresentCustomPresentationControllerCC: UIPresentationControlle
             } else {
                 self.presentConfig.mainView.frame = CGRect(x: self.presentConfig.mainView.frame.origin.x, y: frameHeight - self.presentConfig.mainView.frame.height, width: self.presentConfig.mainView.frame.width, height: self.presentConfig.mainView.frame.height)
             }
-        case .mode_0:
+        case .toUp:
             let changeY = isPresenting ? normalFrame.size.height + self.presentConfig.mainView.frame.size.height / 2.0 : normalFrame.size.height / 2.0
             presentConfig.mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: changeY)
-        case .mode_1:
+        case .fade:
             (isPresenting ? toView : fromView)?.alpha = isPresenting ? 0.0 : 1.0
             
             presentConfig.mainView.center = CGPoint(x: presentConfig.mainViewController.view.frame.width / 2.0, y: presentConfig.mainViewController.view.frame.height / 2.0)
@@ -172,13 +215,13 @@ fileprivate class PresentCustomPresentationControllerCC: UIPresentationControlle
                     self.presentConfig.mainView.frame = CGRect(x: self.presentConfig.mainView.frame.origin.x, y: frameHeight - self.presentConfig.mainView.frame.height, width: self.presentConfig.mainView.frame.width, height: self.presentConfig.mainView.frame.height)
                 }
                 
-            case .mode_0:
+            case .toUp:
                 if isPresenting {
                     self.presentConfig.mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: normalFrame.size.height / 2.0)
                 } else {
                     self.presentConfig.mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: normalFrame.size.height + self.presentConfig.mainView.frame.size.height / 2.0)
                 }
-            case .mode_1:
+            case .fade:
                 (isPresenting ? toView : fromView)?.alpha = isPresenting ? 1.0 : 0.0
             case .custom(let animationView):
                 if isPresenting {

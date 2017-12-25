@@ -26,7 +26,6 @@
 		F898F6971FECFD20001198F9 /* PresentConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F898F6961FECFD20001198F9 /* PresentConfig.swift */; };
 		F8BF642D1F72414A0075B983 /* PresentionBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F8BF642C1F72414A0075B983 /* PresentionBaseViewController.m */; };
 		F8BF642F1F725F350075B983 /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BF642E1F725F350075B983 /* CustomViewController.swift */; };
-		F8CC35411FEA0E9C00708590 /* SYHPresentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CC35401FEA0E9C00708590 /* SYHPresentProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,7 +52,6 @@
 		F8BF642B1F72414A0075B983 /* PresentionBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PresentionBaseViewController.h; sourceTree = "<group>"; };
 		F8BF642C1F72414A0075B983 /* PresentionBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PresentionBaseViewController.m; sourceTree = "<group>"; };
 		F8BF642E1F725F350075B983 /* CustomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
-		F8CC35401FEA0E9C00708590 /* SYHPresentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYHPresentProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +121,6 @@
 				F8BF642B1F72414A0075B983 /* PresentionBaseViewController.h */,
 				F8BF642C1F72414A0075B983 /* PresentionBaseViewController.m */,
 				F8BF642A1F72414A0075B983 /* URLRoute-Bridging-Header.h */,
-				F8CC35401FEA0E9C00708590 /* SYHPresentProtocol.swift */,
 				F898F6961FECFD20001198F9 /* PresentConfig.swift */,
 			);
 			path = PresentTool;
@@ -213,7 +210,6 @@
 				F864C9841F453B2F00918718 /* URLNavigation.swift in Sources */,
 				F85FA11E1EFB687A003950CA /* TestViewController.swift in Sources */,
 				F878E4821F3EE3A500648FB3 /* TwoViewController.swift in Sources */,
-				F8CC35411FEA0E9C00708590 /* SYHPresentProtocol.swift in Sources */,
 				F8BF642D1F72414A0075B983 /* PresentionBaseViewController.m in Sources */,
 				F85FA1161EFB5E48003950CA /* URLNavigationMap.swift in Sources */,
 				F898F6971FECFD20001198F9 /* PresentConfig.swift in Sources */,

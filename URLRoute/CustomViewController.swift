@@ -11,9 +11,9 @@ import UIKit
 class CustomViewController: UIViewController, PresentConfigProtocol {
     var presentConfig: PresentConfig?
     
-    required init(presentedVC: UIViewController) {
+    required init(presentingVC: UIViewController) {
         super.init(nibName: nil, bundle: nil)
-        presentConfig = PresentConfig.init(presentedVC, presentingVC: self)
+        presentConfig = PresentConfig.init(self, presentingVC: presentingVC)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -23,7 +23,9 @@ class CustomViewController: UIViewController, PresentConfigProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.animationType = .actionSheet
+        presentConfig!.animationType = .fade
+        presentConfig!.duration = 0.35
+        
         let test = UIView.init(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
         test.backgroundColor = .blue
         self.view.addSubview(test)
@@ -41,7 +43,10 @@ class CustomViewController: UIViewController, PresentConfigProtocol {
         self.dismiss(animated: true, completion: nil)
     }
     
-    
+    deinit {
+        print(type(of: self).description() + "释放deinit")
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

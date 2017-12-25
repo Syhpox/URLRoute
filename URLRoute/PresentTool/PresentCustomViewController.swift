@@ -4,7 +4,7 @@
 //
 //  Created by WZH on 2017/8/14.
 //  Copyright © 2017年 Zhihua. All rights reserved.
-//
+//  PresentConfig v1.0
 
 import UIKit
 /// 自定义弹出动画接口协议
