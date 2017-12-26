@@ -1,6 +1,6 @@
 //
 //  URLNavigation.swift
-//  HiveConsumer
+//  URLRoute
 //
 //  Created by WZH on 2017/6/8.
 //  Copyright © 2017年 Zhihua. All rights reserved.
@@ -12,7 +12,7 @@ let Navigator = URLNavigator.default
 
 class URLNavigator {
     /// 单例
-    open static let `default` = URLNavigator()
+    static let `default` = URLNavigator()
     
     /// 映射数组  key : pattern
     fileprivate var mapDic: [String: URLNavigationPattern] = [:]

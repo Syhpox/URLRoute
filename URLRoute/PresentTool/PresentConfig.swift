@@ -9,7 +9,7 @@
 import UIKit
 /// required protocol
 protocol PresentConfigProtocol  {
-    var presentConfig: PresentConfig? {get set}
+    var presentConfig: PresentConfig! {get set}
     /*
      required init(presentingVC: UIViewController) {
      super.init(nibName: nil, bundle: nil)
@@ -32,12 +32,15 @@ protocol PresentConfigAnimationProtocol {
 
 /// 动画样式
 enum PresentConfigAnimation {
-    case alert          // 系统Alert样式
-    case actionSheet    // 系统actionSheet样式
-    
-    case toUp         // 下到上
-    case fade           // fade 透明度
-    
+    /// 系统Alert样式
+    case alert
+    /// 系统actionSheet样式
+    case actionSheet
+    /// 下到上
+    case toUp
+    /// fade 透明度
+    case fade
+    /// 自定义
     case custom(PresentConfigAnimationProtocol)
 }
 
@@ -72,18 +75,22 @@ class PresentConfig {
         mainViewController.transitioningDelegate = delegate
         self.animationType = type
         self.duration = duration
-        // Custom初始化失败
         switch type {
         case .custom(let mainView):
             if let vi = mainView as? UIView {
                 self.mainView = vi
             } else {
+                // Custom初始化失败
                 assertionFailure("自定义动画view非UIView类")
             }
             break
         default:
             break;
         }
+    }
+    
+    deinit {
+        print("\(type(of: self))  deinit")
     }
 }
 
@@ -167,29 +174,31 @@ fileprivate class PresentConfigPresentationController: UIPresentationController,
         }
         
         // 动画时间
-        let duration = presentConfig.duration
+        let duration = self.presentConfig.duration
+        let mainView = self.presentConfig.mainView!
+        let mainViewController = self.presentConfig.mainViewController!
+        let frameWidth = mainViewController.view.frame.width
+        let frameHeight = mainViewController.view.frame.height
         
         switch presentConfig.animationType {
         case .alert:
             if isPresenting {
-                presentConfig.mainView.center = CGPoint(x: presentConfig.mainViewController.view.frame.width / 2.0, y: presentConfig.mainViewController.view.frame.height / 2.0)
-                presentConfig.mainView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+                mainView.center = CGPoint(x: frameWidth / 2.0, y: frameHeight / 2.0)
+                mainView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
             }
         case .actionSheet:
-            let frameHeight = presentConfig.mainViewController.view.frame.height
-            let frameWidth = presentConfig.mainViewController.view.frame.width
             if isPresenting {
-                presentConfig.mainView.frame = CGRect(x: (frameWidth - presentConfig.mainView.frame.width) / 2.0, y: frameHeight, width: presentConfig.mainView.frame.width, height: presentConfig.mainView.frame.height)
+                mainView.frame = CGRect(x: (frameWidth - mainView.frame.width) / 2.0, y: frameHeight, width: mainView.frame.width, height: mainView.frame.height)
             } else {
-                self.presentConfig.mainView.frame = CGRect(x: self.presentConfig.mainView.frame.origin.x, y: frameHeight - self.presentConfig.mainView.frame.height, width: self.presentConfig.mainView.frame.width, height: self.presentConfig.mainView.frame.height)
+                mainView.frame = CGRect(x: mainView.frame.origin.x, y: frameHeight - mainView.frame.height, width: mainView.frame.width, height: mainView.frame.height)
             }
         case .toUp:
-            let changeY = isPresenting ? normalFrame.size.height + self.presentConfig.mainView.frame.size.height / 2.0 : normalFrame.size.height / 2.0
-            presentConfig.mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: changeY)
+            let changeY = isPresenting ? normalFrame.size.height + mainView.frame.size.height / 2.0 : normalFrame.size.height / 2.0
+            mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: changeY)
         case .fade:
             (isPresenting ? toView : fromView)?.alpha = isPresenting ? 0.0 : 1.0
             
-            presentConfig.mainView.center = CGPoint(x: presentConfig.mainViewController.view.frame.width / 2.0, y: presentConfig.mainViewController.view.frame.height / 2.0)
+            mainView.center = CGPoint(x: frameWidth / 2.0, y: frameHeight / 2.0)
         case .custom(let animationView):
             if isPresenting {
                 animationView.animatedBegin()
@@ -204,22 +213,20 @@ fileprivate class PresentConfigPresentationController: UIPresentationController,
             case .alert:
                 (isPresenting ? toView : fromView)?.alpha = isPresenting ? 1.0 : 0.0
                 if isPresenting {
-                    self.presentConfig.mainView.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
+                    mainView.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
                 }
             case .actionSheet:
-                let frameHeight = self.presentConfig.mainViewController.view.frame.height
-                let frameWidth = self.presentConfig.mainViewController.view.frame.width
                 if !isPresenting {
-                    self.presentConfig.mainView.frame = CGRect(x: (frameWidth - self.presentConfig.mainView.frame.width) / 2.0, y: frameHeight, width: self.presentConfig.mainView.frame.width, height: self.presentConfig.mainView.frame.height)
+                    mainView.frame = CGRect(x: (frameWidth - mainView.frame.width) / 2.0, y: frameHeight, width: mainView.frame.width, height: mainView.frame.height)
                 } else {
-                    self.presentConfig.mainView.frame = CGRect(x: self.presentConfig.mainView.frame.origin.x, y: frameHeight - self.presentConfig.mainView.frame.height, width: self.presentConfig.mainView.frame.width, height: self.presentConfig.mainView.frame.height)
+                    mainView.frame = CGRect(x: mainView.frame.origin.x, y: frameHeight - mainView.frame.height, width: mainView.frame.width, height: mainView.frame.height)
                 }
                 
             case .toUp:
                 if isPresenting {
-                    self.presentConfig.mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: normalFrame.size.height / 2.0)
+                    mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: normalFrame.size.height / 2.0)
                 } else {
-                    self.presentConfig.mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: normalFrame.size.height + self.presentConfig.mainView.frame.size.height / 2.0)
+                    mainView.center = CGPoint(x: normalFrame.size.width / 2.0, y: normalFrame.size.height + mainView.frame.size.height / 2.0)
                 }
             case .fade:
                 (isPresenting ? toView : fromView)?.alpha = isPresenting ? 1.0 : 0.0

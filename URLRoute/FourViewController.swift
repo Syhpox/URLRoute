@@ -29,7 +29,10 @@ class FourViewController: UIViewController {
     func btnClick() {
         
         let testVC = CustomViewController.init(presentingVC: self)
-        self.present(testVC, animated: true, completion: nil)
+        self.present(testVC, animated: true) {
+            print(testVC.presentConfig)
+        }
+//        self.present(testVC, animated: true, completion: nil)
     }
     
     deinit {
