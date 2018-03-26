@@ -8,14 +8,12 @@
 
 import UIKit
 
-class CustomViewController: UIViewController, PresentConfigProtocol {
-    var presentConfig: PresentConfig!
+class CustomViewController: UIViewController {
     
-    required init(presentingVC: UIViewController) {
+    init() {
         super.init(nibName: nil, bundle: nil)
-        presentConfig = PresentConfig.init(self, presentingVC: presentingVC)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -23,17 +21,13 @@ class CustomViewController: UIViewController, PresentConfigProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        presentConfig.animationType = .alert
-        presentConfig.duration = 0.35
-        
         let test = UIView.init(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
         test.backgroundColor = .blue
         self.view.addSubview(test)
-        presentConfig.mainView = test
         
         let btn = UIButton.init(type: .system)
         btn.setTitle("dismiss", for: .normal)
-        btn.frame = CGRect(x: 0, y: 0, width: 60, height: 30)
+        btn.frame = CGRect(x: 100, y: 200, width: 60, height: 30)
         test.addSubview(btn)
         btn.addTarget(self, action: #selector(btnClick), for: .touchUpInside)
     }

@@ -28,9 +28,8 @@ class FourViewController: UIViewController {
     }
     func btnClick() {
         
-        let testVC = CustomViewController.init(presentingVC: self)
+        let testVC = CustomViewController.init()
         self.present(testVC, animated: true) {
-            print(testVC.presentConfig)
         }
 //        self.present(testVC, animated: true, completion: nil)
     }
